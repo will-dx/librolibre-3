@@ -1,0 +1,41 @@
+# RENDER CONFIGURATION - GUÍA PARA DESPLIEGUE MANUAL
+# ===================================================
+# Este archivo es SOLO una referencia. Para un Web Service manual en Render:
+#
+# 1. En el Dashboard de Render, crea un PostgreSQL database primero:
+#    - New → PostgreSQL → Nombre: librolibre-db → Plan: Free
+#
+# 2. Crea un Web Service:
+#    - New → Web Service → Conectar repositorio: will-dx/librolibre-3
+#
+# 3. Configura estas Variables de Entorno en el Web Service:
+#    DATABASE_URL = (copiar "Internal Database URL" de librolibre-db)
+#    ALLOWED_HOSTS = librolibre-3.onrender.com,localhost,127.0.0.1
+#    CSRF_TRUSTED_ORIGINS = https://librolibre-3.onrender.com
+#    SECRET_KEY = (Render puede generar una automática)
+#    DEBUG = False
+#    PYTHON_VERSION = 3.11.0
+#
+# 4. Build Command: ./build.sh
+# 5. Start Command: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+
+services:
+  - type: web
+    name: librolibre-3
+    runtime: python
+    region: oregon
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "librolibre-3.onrender.com,localhost,127.0.0.1"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://librolibre-3.onrender.com"
+    healthCheckPath: /
+    autoDeploy: true
+    staticFiles:
+      - path: /static
+        destination: staticfiles
