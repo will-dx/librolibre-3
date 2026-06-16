@@ -39,29 +39,29 @@ DATABASE_URL=postgresql://... (string de conexión Supabase)
 ```
 
 ## Despliegue (Render)
-- Build command: `pip install -r requirements.txt && python manage.py collectstatic --noinput`
-- Start command: `gunicorn librolibre.wsgi:application`
-- Agregar DATABASE_URL, SECRET_KEY, ALLOWED_HOSTS en variables de entorno de Render
+- Build command: Usar `./build.sh` (ejecuta pip install, collectstatic, migrate)
+- Start command: `gunicorn config.wsgi:application`
+- Agregar DATABASE_URL, SECRET_KEY, ALLOWED_HOSTS, DEBUG en variables de entorno de Render
+- DATABASE_URL: `mysql://root:password@localhost:3306/librolibre`
 
 ## Estructura de la App (Django)
 ```
-librolibre/
-├── core/           # App principal: catálogo, CRUD libros, perfil
-├── accounts/       # Modelo de usuario personalizado si se necesita (o usar auth de Django)
-├── librolibre/     # Configuración del proyecto, wsgi, urls
+config/          # Configuración del proyecto, wsgi, urls
+core/            # App principal: catálogo, CRUD libros, perfil
+accounts/        # Modelo de usuario personalizado si se necesita (o usar auth de Django)
 ├── static/
 │   ├── css/
-│   │   └── styles.css   # Diseño moderno con animaciones, paleta primary/accent/gold
+│   │   └── styles.css
 │   └── js/
-│       └── main.js      # Scroll reveal, toasts, filtros, búsqueda, contadores
+│       └── main.js
 └── templates/
-    ├── base.html        # Plantilla base con navbar y layout principal
-    ├── index.html       # Landing page pública (hero, stats, cómo funciona)
-    ├── login.html       # Inicio de sesión
-    ├── registro.html    # Registro de nuevos usuarios
-    ├── catalogo.html    # Grid de libros con filtros y búsqueda
-    ├── publicar.html    # Formulario para publicar libro
-    └── perfil.html      # Perfil del usuario con stats y sus libros
+    ├── base.html
+    ├── index.html
+    ├── login.html
+    ├── registro.html
+    ├── catalogo.html
+    ├── publicar.html
+    └── perfil.html
 ```
 
 ## Notas de Implementación
