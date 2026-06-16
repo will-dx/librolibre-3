@@ -2,9 +2,14 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import dj_database_url
-import cloudinary
 
 load_dotenv()
+
+# Import cloudinary only if available (for production with media uploads)
+try:
+    import cloudinary
+except ImportError:
+    cloudinary = None
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -100,23 +105,6 @@ STORAGES = {
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-# Configuración Cloudinary para imágenes en producción
-if os.getenv('CLOUDINARY_URL') or (os.getenv('CLOUDINARY_NAME') and os.getenv('CLOUDINARY_API_KEY')):
-    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
-    MEDIA_URL = ''
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    
-    cloud_name = os.getenv('CLOUDINARY_NAME', '')
-    api_key = os.getenv('CLOUDINARY_API_KEY', '')
-    api_secret = os.getenv('CLOUDINARY_API_SECRET', '')
-    
-    cloudinary.config(
-        cloud_name=cloud_name,
-        api_key=api_key,
-        api_secret=api_secret,
-        secure=True
-    )
 
 AUTH_USER_MODEL = 'catalogo.CustomUser'
 
