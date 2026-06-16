@@ -16,8 +16,17 @@
 #    DEBUG = False
 #    PYTHON_VERSION = 3.11.0
 #
-# 4. Build Command: ./build.sh
-# 5. Start Command: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+# 4. Para imágenes (OBLIGATORIO):
+#    - Regístrate en https://cloudinary.com (gratuito)
+#    - En el Dashboard → Producto → Configuración de cuenta
+#    - Copia: Cloud Name, API Key, API Secret
+#    Agrega estas variables:
+#    CLOUDINARY_NAME = tu-cloud-name
+#    CLOUDINARY_API_KEY = tu-api-key
+#    CLOUDINARY_API_SECRET = tu-api-secret
+#
+# 5. Build Command: ./build.sh
+# 6. Start Command: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
 
 services:
   - type: web
@@ -34,6 +43,12 @@ services:
         value: "librolibre-3.onrender.com,localhost,127.0.0.1"
       - key: CSRF_TRUSTED_ORIGINS
         value: "https://librolibre-3.onrender.com"
+      - key: CLOUDINARY_NAME
+        value: ""  # REEMPLAZAR con tu cloud name
+      - key: CLOUDINARY_API_KEY
+        value: ""  # REEMPLAZAR con tu api key
+      - key: CLOUDINARY_API_SECRET
+        value: ""  # REEMPLAZAR con tu api secret
     healthCheckPath: /
     autoDeploy: true
     staticFiles:
