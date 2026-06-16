@@ -101,6 +101,23 @@ STORAGES = {
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Configuración Cloudinary para imágenes en producción
+if os.getenv('CLOUDINARY_URL') or (os.getenv('CLOUDINARY_NAME') and os.getenv('CLOUDINARY_API_KEY')):
+    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
+    MEDIA_URL = ''
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    
+    cloud_name = os.getenv('CLOUDINARY_NAME', '')
+    api_key = os.getenv('CLOUDINARY_API_KEY', '')
+    api_secret = os.getenv('CLOUDINARY_API_SECRET', '')
+    
+    cloudinary.config(
+        cloud_name=cloud_name,
+        api_key=api_key,
+        api_secret=api_secret,
+        secure=True
+    )
+
 AUTH_USER_MODEL = 'catalogo.CustomUser'
 
 LOGIN_URL = 'login'
@@ -108,19 +125,6 @@ LOGIN_REDIRECT_URL = 'catalogo'
 LOGOUT_REDIRECT_URL = 'index'
 
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://librolibre-3.onrender.com').split(',')
-
-if not os.getenv('CLOUDINARY_URL'):
-    MEDIA_URL = 'media/'
-    MEDIA_ROOT = BASE_DIR / 'media'
-else:
-    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    cloudinary.config(
-        cloud_name=os.getenv('CLOUDINARY_NAME'),
-        api_key=os.getenv('CLOUDINARY_API_KEY'),
-        api_secret=os.getenv('CLOUDINARY_API_SECRET'),
-        secure=True
-    )
 
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
