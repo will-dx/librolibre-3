@@ -178,7 +178,7 @@ def mensajes_enviar(request, libro_id=None):
         initial['destinatario'] = libro.usuario_id
 
     if request.method == 'POST':
-        form = MensajeForm(request.POST, initial=initial)
+        form = MensajeForm(request.POST, initial=initial, remitente=request.user)
         if form.is_valid():
             mensaje = form.save(commit=False)
             mensaje.remitente = request.user
@@ -188,7 +188,7 @@ def mensajes_enviar(request, libro_id=None):
             messages.success(request, 'Mensaje enviado correctamente.')
             return redirect('mensajes_inbox')
     else:
-        form = MensajeForm(initial=initial)
+        form = MensajeForm(initial=initial, remitente=request.user)
 
     return render(request, 'mensajes/enviar.html', {
         'form': form,

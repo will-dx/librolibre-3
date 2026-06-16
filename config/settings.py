@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import dj_database_url
+import cloudinary
 
 load_dotenv()
 
@@ -106,7 +107,20 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'catalogo'
 LOGOUT_REDIRECT_URL = 'index'
 
-CSRF_TRUSTED_ORIGINS = ['https://librolibre-3.onrender.com']
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://librolibre-3.onrender.com').split(',')
+
+if not os.getenv('CLOUDINARY_URL'):
+    MEDIA_URL = 'media/'
+    MEDIA_ROOT = BASE_DIR / 'media'
+else:
+    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    cloudinary.config(
+        cloud_name=os.getenv('CLOUDINARY_NAME'),
+        api_key=os.getenv('CLOUDINARY_API_KEY'),
+        api_secret=os.getenv('CLOUDINARY_API_SECRET'),
+        secure=True
+    )
 
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

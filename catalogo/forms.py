@@ -112,10 +112,12 @@ class MensajeForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        remitente = kwargs.pop('remitente', None)
         super().__init__(*args, **kwargs)
-        self.fields['destinatario'].queryset = CustomUser.objects.exclude(
-            id=self.initial.get('remitente_id', 0)
-        )
+        if remitente:
+            self.fields['destinatario'].queryset = CustomUser.objects.exclude(id=remitente.id)
+        else:
+            self.fields['destinatario'].queryset = CustomUser.objects.all()
         self.fields['destinatario'].empty_label = 'Selecciona un destinatario'
 
 
