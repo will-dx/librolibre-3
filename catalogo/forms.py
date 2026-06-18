@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
-from .models import CustomUser, Libro, Mensaje, ContactoMensaje
+from .models import CustomUser, Mensaje, ContactoMensaje
+from .models import Libro
 
 
 class CustomUserCreationForm(forms.ModelForm):
@@ -197,4 +198,23 @@ class ContactoForm(forms.ModelForm):
             'email': 'Correo',
             'asunto': 'Asunto',
             'mensaje': 'Mensaje',
+        }
+
+
+class LibroForm(forms.ModelForm):
+    class Meta:
+        model = Libro
+        # Definimos solo los campos que el usuario va a llenar en la web
+        # Excluimos 'usuario' para que Django no lo pida como obligatorio en el HTML
+        fields = ['titulo', 'autor', 'estado', 'foto', 'materia']
+
+        # Opcional: Esto añade los mismos placeholders de tu HTML original
+        widgets = {
+            'titulo': forms.TextInput(attrs={
+                'placeholder': 'Ej: Cálculo Diferencial',
+                'autofocus': 'autofocus'
+            }),
+            'autor': forms.TextInput(attrs={
+                'placeholder': 'Ej: Juan Pérez López'
+            }),
         }
