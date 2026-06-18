@@ -28,7 +28,7 @@
                 <li><a href="{% url 'mensajes_inbox' %}" class="{% if active == 'mensajes' %}active{% endif %}">Mensajes</a></li>
                 <li><a href="{% url 'publicar' %}" class="{% if active == 'publicar' %}active{% endif %}">Publicar</a></li>
                 <li><a href="{% url 'perfil' %}" class="{% if active == 'perfil' %}active{% endif %}">Mi Perfil</a></li>
-
+                <li><a href="{% url 'favoritos_lista' %}" class="{% if active == 'favoritos' %}active{% endif %}">⭐ Favoritos</a></li>
                 <li><a href="{% url 'ajustes_perfil' %}" class="btn btn-sm btn-outline">⚙️ Ajustes</a></li>
                 <li><a href="{% url 'logout' %}" class="btn btn-sm btn-outline-accent">Salir</a></li>
             </ul>
