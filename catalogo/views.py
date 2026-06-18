@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Count
-from .models import CustomUser, Libro, Materia, Mensaje, ContactoMensaje
+from .models import CustomUser, Libro, Materia, Mensaje, Favorito, ContactoMensaje
 from .forms import (
     CustomUserCreationForm, CustomAuthenticationForm, LibroForm,
     MensajeForm, RespuestaMensajeForm, PerfilForm, CambioPasswordForm,
@@ -335,3 +335,18 @@ def mapa_intercambio(request, pk):
         'propietario': propietario,
         'MAP_DATA': data,
     })
+@login_required
+def favoritos_toggle(request, libro_id):
+    libro = get_object_or_404(Libro, pk=libro_id)
+    favorito, created = Favorito.objects.get_or_create(usuario=request.user, libro=libro)
+    if not created:
+        favorito.delete()
+        messages.info(request, 'Libro quitado de favoritos')
+    else:
+        messages.success(request, 'Libro añadido a favoritos')
+    return redirect('catalogo')
+
+@login_required
+def favoritos_lista(request):
+    favoritos = Favorito.objects.filter(usuario=request.user).select_related('libro')
+    return render(request, 'favoritos/lista.html', {'favoritos': favoritos})

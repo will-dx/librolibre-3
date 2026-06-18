@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mis Favoritos{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Libros Favoritos</h2>
+  {% if favoritos %}
+    <div class="row">
+      {% for fav in favoritos %}
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            {% if fav.libro.foto %}
+              <img src="{{ fav.libro.foto.url }}" class="card-img-top" alt="{{ fav.libro.titulo }}">
+            {% else %}
+              <img src="{% static 'img/default_book.jpg' %}" class="card-img-top" alt="Libro">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ fav.libro.titulo }}</h5>
+              <p class="card-text">{{ fav.libro.autor }}</p>
+              <a href="{% url 'catalogo' %}" class="btn btn-primary">Ver Catálogo</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No tienes libros favoritos.</p>
+  {% endif %}
+</div>
+{% endblock %}

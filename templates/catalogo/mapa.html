@@ -4,7 +4,7 @@
 {% block title %}Mapa de entrega{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{ % static 'css/mapa.css' % }">
+<link rel="stylesheet" href="{% static 'css/mapa.css' %}">
 <link
   rel="stylesheet"
   href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -33,8 +33,12 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-o9N1j8Z3XSgR8cDjv4C2B6M81ZWobQ68aUnTz5S9EcM="
         crossorigin=""></script>
-<script src="{ % static 'js/mapa.js' % }"></script>
+<script src="{% static 'js/mapa.js' %}"></script>
+{% if MAP_DATA.solicitante.lat and MAP_DATA.propietario.lat %}
 <script>
   const MAP_DATA = {{ MAP_DATA|json_script:"map-data" }};
 </script>
+{% else %}
+<p class="text-center">Información de ubicación no disponible.</p>
+{% endif %}
 {% endblock %}
