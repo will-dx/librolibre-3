@@ -30,5 +30,6 @@ urlpatterns = [
     path('contacto/', views.pagina_contacto, name='pagina_contacto'),
     # Favoritos
     path('favoritos/', views.favoritos_lista, name='favoritos_lista'),
-    path('favoritos/toggle/<int:libro_id>/', views.favoritos_toggle, name='favoritos_toggle'),
+    path('libro/<int:pk>/mapa/', views.mapa_intercambio, name='mapa_intercambio'),
+
 ]

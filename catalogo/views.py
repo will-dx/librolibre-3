@@ -336,3 +336,31 @@ def favoritos_toggle(request, libro_id):
     else:
         messages.success(request, f'"{libro.titulo}" agregado a favoritos.')
     return redirect(request.META.get('HTTP_REFERER', 'catalogo'))
+
+
+# ─── MAPA DE INTERCAMBIO ────────────────────────
+
+@login_required
+def mapa_intercambio(request, pk):
+    libro = get_object_or_404(Libro, pk=pk)
+    propietario = libro.usuario
+    solicitante = request.user
+    # Preparar datos para el template
+    data = {
+        'solicitante': {
+            'name': solicitante.nombre,
+            'lat': float(solicitante.latitude) if solicitante.latitude else None,
+            'lng': float(solicitante.longitude) if solicitante.longitude else None,
+        },
+        'propietario': {
+            'name': propietario.nombre,
+            'lat': float(propietario.latitude) if propietario.latitude else None,
+            'lng': float(propietario.longitude) if propietario.longitude else None,
+        },
+    }
+    return render(request, 'catalogo/mapa.html', {
+        'libro': libro,
+        'solicitante': solicitante,
+        'propietario': propietario,
+        'MAP_DATA': data,
+    })

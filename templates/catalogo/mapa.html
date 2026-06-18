@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mapa de entrega{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{ % static 'css/mapa.css' % }">
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-sA+e2D6ZtXvZB6h3U8s6zK2d+zrOd4V+jzDS8HRy8vs="
+  crossorigin=""
+/>
+{% endblock %}
+
+{% block content %}
+<div class="mapa-container">
+  <h2 class="mapa-titulo">
+    Encuentra la mejor manera de entregar <span class="libro-titulo">{{ libro.titulo }}</span>
+  </h2>
+
+  <div id="mapa" class="mapa"></div>
+
+  <p class="mapa-leyenda">
+    <strong>{{ solicitante.nombre }}</strong> (tú) — <strong>{{ propietario.nombre }}</strong> (propietario)
+  </p>
+
+  <a href="{% url 'catalogo' %}" class="btn btn-primary mt-3">Volver al catálogo</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-o9N1j8Z3XSgR8cDjv4C2B6M81ZWobQ68aUnTz5S9EcM="
+        crossorigin=""></script>
+<script src="{ % static 'js/mapa.js' % }"></script>
+<script>
+  const MAP_DATA = {{ MAP_DATA|json_script:"map-data" }};
+</script>
+{% endblock %}

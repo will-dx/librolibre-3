@@ -64,7 +64,8 @@
                     <div style="display:flex;gap:0.35rem;">
                         <a href="{% url 'favoritos_toggle' libro.id %}"
                            class="fav-btn {% if libro.id in favoritos_ids %}active{% endif %}"></a>
-                        <a href="{% url 'solicitar' libro.id %}" class="btn btn-primary btn-sm">📩 Solicitar</a>
+                        <a href="{% url 'mapa_intercambio' libro.id %}" class="btn btn-accent btn-sm">🗺️ Ver mapa</a>
+
                     </div>
                 </div>
             </div>
