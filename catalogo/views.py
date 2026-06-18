@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Count
-from .models import CustomUser, Libro, Materia, Mensaje, Favorito, ContactoMensaje
+from .models import CustomUser, Libro, Materia, Mensaje, ContactoMensaje
 from .forms import (
     CustomUserCreationForm, CustomAuthenticationForm, LibroForm,
     MensajeForm, RespuestaMensajeForm, PerfilForm, CambioPasswordForm,
@@ -56,12 +56,8 @@ def logout_view(request):
 @login_required
 def catalogo_view(request):
     libros = Libro.objects.select_related('usuario', 'materia').all()
+    # No se usan favoritos en esta vista
     favoritos_ids = []
-    if request.user.is_authenticated:
-        favoritos_ids = list(
-            Favorito.objects.filter(usuario=request.user)
-            .values_list('libro_id', flat=True)
-        )
     return render(request, 'catalogo.html', {
         'libros': libros,
         'favoritos_ids': favoritos_ids,
@@ -311,31 +307,6 @@ def pagina_contacto(request):
     else:
         form = ContactoForm()
     return render(request, 'paginas/contacto.html', {'form': form})
-
-
-# ─── FAVORITOS ─────────────────────────────────────
-
-@login_required
-def favoritos_lista(request):
-    favoritos = Favorito.objects.filter(usuario=request.user).select_related('libro', 'libro__usuario')
-    return render(request, 'favoritos/lista.html', {
-        'favoritos': favoritos,
-        'active': 'favoritos',
-    })
-
-
-@login_required
-def favoritos_toggle(request, libro_id):
-    libro = get_object_or_404(Libro, id=libro_id)
-    favorito, created = Favorito.objects.get_or_create(
-        usuario=request.user, libro=libro
-    )
-    if not created:
-        favorito.delete()
-        messages.info(request, f'"{libro.titulo}" eliminado de favoritos.')
-    else:
-        messages.success(request, f'"{libro.titulo}" agregado a favoritos.')
-    return redirect(request.META.get('HTTP_REFERER', 'catalogo'))
 
 
 # ─── MAPA DE INTERCAMBIO ────────────────────────
